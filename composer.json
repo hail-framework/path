@@ -23,7 +23,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/hail-framework/paht.git"
+      "url": "https://github.com/hail-framework/path.git"
     }
   ],
   "require": {
