@@ -1,0 +1,32 @@
+{
+  "name": "hail/path",
+  "description": "Path utils",
+  "type": "library",
+  "keywords": ["hail", "framework", "path"],
+  "homepage": "http://framework.flyinghail.com/",
+  "support": {
+    "issues": "https://github.com/hail-framework/path/issues",
+    "source": "https://github.com/hail-framework/path"
+  },
+  "authors": [
+    {
+      "name": "FENG Hao",
+      "email": "flyinghail@msn.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Hail\\Path\\": "src/"
+    }
+  },
+  "license": "MIT",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/hail-framework/paht.git"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.3"
+  }
+}
