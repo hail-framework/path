@@ -11,25 +11,12 @@ class Paths
 {
     private $base = [];
 
-    public function __construct(array $bases = [])
+    public function __construct(array $bases = [], bool $autoCreate = false)
     {
         foreach ($bases as $k => $v) {
-            $this->$k = new Path($v);
+            $this->$k = new Path($v, $autoCreate);
             $this->base[$k] = true;
         }
-    }
-
-    public function absolute(string $root, string ...$paths): string
-    {
-        if ($root[0] === '@') {
-            $root = substr($root, 1);
-        }
-
-        if (!isset($this->base[$root])) {
-            throw new \RuntimeException("Base path not defined '$root'");
-        }
-
-        return $this->$root->absolute(...$paths);
     }
 
     /**

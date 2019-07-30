@@ -24,17 +24,26 @@ class Path
      */
     private $cache = [];
 
-    public function __construct(string $base)
+    public function __construct(string $base, bool $autoCreate = false)
     {
-        if (false === ($base = \realpath($base))) {
+        if (false === ($base = \realpath($base)) && (!$autoCreate || !static::mkdir($base))) {
             throw new \InvalidArgumentException("The base path `$base` not exists");
         }
 
         $this->base = $base;
     }
 
+    public function base(): string
+    {
+        return $this->base;
+    }
+
     public function absolute(string ...$paths): string
     {
+        if ($paths === []) {
+            return $this->base;
+        }
+
         $path = self::join($paths);
 
         if (isset($this->cache[$path])) {
@@ -230,6 +239,8 @@ class Path
 
     public static function mkdir(string $path, int $mode = 0777): bool
     {
+        $path = static::normalize($path);
+
         if (\is_dir($path)) {
             return true;
         }

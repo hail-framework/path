@@ -3,21 +3,22 @@
 # Example
 
 ```php
-use Hail\Path\Path;
+use Hail\Path\{Paths, Path};
 
-$path = new Path([
-    '@root' => __DIR__,
-    '@storage' => __DIR__ .  '/storage',
+__DIR__  . DIRECTORY_SEPARATOR .  'storage' === Path::normalize(__DIR__, 'storage'); // true
+
+$paths = new Paths([
+    'root' => __DIR__,
+    'storage' => __DIR__ .  '/storage',
 ]);
 
-__DIR__  . DIRECTORY_SEPARATOR .  'storage' === $path->absolute(__DIR__, 'storage'); // true
-$path->root() === $path->absolute('@root'); // true
-$path->root('storage') === $path->absolute('@root', 'storage'); // true
-$path->storage() === $path->absolute('@storage'); // true
-$path->storage('a', 'b') === $path->absolute('@storage', 'a', 'b'); // true
+$paths->root instanceof Path; // true
+$paths->root->base() === $paths->root(); // true
+$paths->root->absolute('a', 'b') === $paths->root('a', 'b'); // true
 
-// create directory 
-$bool = $path->create(
-    $path->storage('a', 'b', 'c.txt'), Path::FILE
-);
+$paths->storage instanceof Path; // true
+$paths->storage->base() === $paths->root('storage'); // true
+$paths->root->relative($paths->storage()) === 'storage'; // true
+
+
 ```
