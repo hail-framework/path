@@ -9,14 +9,20 @@ namespace Hail\Path;
  */
 class Paths
 {
-    private $bases = [];
+    /**
+     * @var array
+     */
+    private $bases;
+
+    /**
+     * @var bool
+     */
+    private $autoCreate;
 
     public function __construct(array $bases = [], bool $autoCreate = false)
     {
-        foreach ($bases as $k => $v) {
-            $this->$k = new Path($v, $autoCreate);
-            $this->bases[$k] = true;
-        }
+        $this->bases = $bases;
+        $this->autoCreate = $autoCreate;
     }
 
     /**
@@ -27,11 +33,16 @@ class Paths
      */
     public function __call(string $name, array $arguments): string
     {
+        return $this->$name->absolute(...$arguments);
+    }
+
+    public function __get(string $name): Path
+    {
         if (!isset($this->bases[$name])) {
             throw new \RuntimeException("Base path not defined '$name'");
         }
 
-        return $this->$name->absolute(...$arguments);
+        return $this->$name = new Path($this->bases[$name], $this->autoCreate);
     }
 
     public function bases(): array
