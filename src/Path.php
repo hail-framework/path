@@ -57,6 +57,11 @@ class Path
         return Helper::normalize(...$paths);
     }
 
+    public static function relative(string $path, string $base): string
+    {
+        return Helper::relative($path, $base);
+    }
+
     public function home(): string
     {
         return Helper::home();

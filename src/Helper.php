@@ -2,7 +2,12 @@
 
 namespace Hail\Path;
 
-
+/**
+ * Class Helper
+ *
+ * @package Hail\Path
+ * @internal
+ */
 class Helper
 {
     public static function join(array $paths): string
@@ -145,5 +150,57 @@ class Helper
         }
 
         return true;
+    }
+
+    public static function relative(string $path, string $base): string
+    {
+        $base = self::normalize($base);
+        $baseSplit = self::split($base);
+        if ($baseSplit['root'] === '') {
+            throw new \InvalidArgumentException('The base path must be a absolute path');
+        }
+
+        return self::relativeInternal([$path], $baseSplit);
+    }
+
+    public static function relativeInternal(array $paths, array $base): string
+    {
+        [
+            'schema' => $baseSchema,
+            'root' => $baseRoot,
+            'path' => $basePath
+        ] = $base;
+
+        $path = self::normalize(...$paths);
+
+        [
+            'schema' => $schema,
+            'root' => $root,
+            'path' => $relativePath,
+        ] = self::split($path);
+
+        if ($schema !== $baseSchema || ($root !== '' && $baseRoot !== '' && $root !== $baseRoot)) {
+            throw new \InvalidArgumentException("Paths have different roots ('{$schema}{$root}' and '{$baseSchema}{$baseRoot}').");
+        }
+
+        if ($basePath === '' || ('' === $root && '' !== $baseRoot)) {
+            return $relativePath;
+        }
+
+        $parts = \explode(DIRECTORY_SEPARATOR, $relativePath);
+        $baseParts = \explode(DIRECTORY_SEPARATOR, $basePath);
+
+        $ddPrefix = '';
+        $match = true;
+        foreach ($baseParts as $i => $basePart) {
+            if ($match && isset($parts[$i]) && $basePart === $parts[$i]) {
+                unset($parts[$i]);
+                continue;
+            }
+            $match = false;
+            $ddPrefix .= '..' . DIRECTORY_SEPARATOR;
+        }
+
+        return rtrim($ddPrefix . implode(DIRECTORY_SEPARATOR, $parts), DIRECTORY_SEPARATOR);
     }
 }
