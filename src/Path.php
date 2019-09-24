@@ -62,12 +62,12 @@ class Path
         return Helper::relative($path, $base);
     }
 
-    public function home(): string
+    public function getHome(): string
     {
         return Helper::home();
     }
 
-    public function root(string $path): string
+    public function getRoot(string $path): string
     {
         return Helper::root($path);
     }
