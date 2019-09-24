@@ -109,7 +109,7 @@ class Helper
             isset($path[1]) && ':' === $path[1] &&
             ($ord = \ord($path[0] = \strtoupper($path[0]))) > 64 && $ord < 91 // A-Z => 65-90
         ) {
-            $root = $path[0] . ':/';
+            $root = $path[0] . ':\\';
             if (!isset($path[2])) {
                 $path = '';
             } elseif ('/' === $path[2]) {
