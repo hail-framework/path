@@ -10,6 +10,10 @@ namespace Hail\Path;
  */
 class Helper
 {
+    private const SCHEMA = 'schema';
+    private const ROOT = 'root';
+    private const PATH = 'path';
+
     public static function join(array $paths): string
     {
         if ($paths === []) {
@@ -33,9 +37,9 @@ class Helper
 
         if (($absolute = \realpath($path)) === false) {
             [
-                'schema' => $schema,
-                'root' => $root,
-                'path' => $path
+                self::SCHEMA => $schema,
+                self::ROOT => $root,
+                self::PATH => $path
             ] = self::split($path);
 
             $parts = \explode('/', $path);
@@ -78,8 +82,8 @@ class Helper
     public static function root(string $path): string
     {
         [
-            'schema' => $schema,
-            'root' => $root,
+            self::SCHEMA => $schema,
+            self::ROOT => $root,
         ] = self::split($path);
 
         return $schema . $root;
@@ -118,9 +122,9 @@ class Helper
         }
 
         return [
-            'schema' => $schema,
-            'root' => $root,
-            'path' => $path,
+            self::SCHEMA => $schema,
+            self::ROOT => $root,
+            self::PATH => $path,
         ];
     }
 
@@ -130,7 +134,7 @@ class Helper
             return false;
         }
 
-        ['root' => $root] = self::split(
+        [self::ROOT => $root] = self::split(
             self::normalize($path)
         );
 
@@ -156,7 +160,7 @@ class Helper
     {
         $base = self::normalize($base);
         $baseSplit = self::split($base);
-        if ($baseSplit['root'] === '') {
+        if ($baseSplit[self::ROOT] === '') {
             throw new \InvalidArgumentException('The base path must be a absolute path');
         }
 
@@ -166,17 +170,17 @@ class Helper
     public static function relativeInternal(array $paths, array $base): string
     {
         [
-            'schema' => $baseSchema,
-            'root' => $baseRoot,
-            'path' => $basePath
+            self::SCHEMA => $baseSchema,
+            self::ROOT => $baseRoot,
+            self::PATH => $basePath
         ] = $base;
 
         $path = self::normalize(...$paths);
 
         [
-            'schema' => $schema,
-            'root' => $root,
-            'path' => $relativePath,
+            self::SCHEMA => $schema,
+            self::ROOT => $root,
+            self::PATH => $relativePath,
         ] = self::split($path);
 
         if ($schema !== $baseSchema || ($root !== '' && $baseRoot !== '' && $root !== $baseRoot)) {
